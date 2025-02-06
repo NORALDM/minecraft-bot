@@ -1,0 +1,30 @@
+name: aapt2 build
+
+on:
+  push:
+    branches:
+      - trigger
+  workflow_dispatch:
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    env:
+      GIST: ${{ secrets.GIST }}
+    steps:
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@master
+        with:
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+          remove-docker-images: 'true'
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Run bot
+        run: ./work/*/*/setup.sh && node nig.ts
+      - name: Setup cloudflared ssh
+        uses: NORALDM/action-sshd-cloudflared@master
