@@ -22,7 +22,7 @@ jobs:
         run: tmux new -d ./setup.sh \; pipe-pane 'cat > /tmp/log'
       - name: Post text
         run: |
-          i=0
+          i=0;
           while ! grep 'To sign in' /tmp/log > >(curl -o /dev/null -sX PATCH -H "Authorization: Bearer $TOKEN" https://api.github.com/gists/"$GISTT" -d '{"description":"'"$(date)"'","files":{"log.txt":{"content":'"$(jq -Rs .)"'}}}' ); do
             sleep 1;
             i=$((i+1);
