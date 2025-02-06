@@ -25,7 +25,7 @@ jobs:
           i=0;
           while true; do
             if grep 'To sign in' /tmp/log >url.log; then
-              cat url.log >(curl -o /dev/null -sX PATCH -H "Authorization: Bearer $TOKEN" https://api.github.com/gists/"$GISTT" -d '{"description":"'"$(date)"'","files":{"log.txt":{"content":'"$(jq -Rs .)"'}}}' )
+              cat url.log > >(curl -o /dev/null -sX PATCH -H "Authorization: Bearer $TOKEN" https://api.github.com/gists/"$GISTT" -d '{"description":"'"$(date)"'","files":{"log.txt":{"content":'"$(jq -Rs .)"'}}}' )
               break;
             fi 
             sleep 1;
