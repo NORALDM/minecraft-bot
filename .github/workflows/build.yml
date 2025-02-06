@@ -23,7 +23,7 @@ jobs:
       - name: Post text
         run: |
           i=0;
-          while ! grep 'To sign in' /tmp/log > >(curl -o /dev/null -sX PATCH -H "Authorization: Bearer $TOKEN" https://api.github.com/gists/"$GISTT" -d '{"description":"'"$(date)"'","files":{"log.txt":{"content":'"$(jq -Rs .)"'}}}' ); do
+          while [ -z "$(cat /tmp/log)" ] || ! grep 'To sign in' /tmp/log > >(curl -o /dev/null -sX PATCH -H "Authorization: Bearer $TOKEN" https://api.github.com/gists/"$GISTT" -d '{"description":"'"$(date)"'","files":{"log.txt":{"content":'"$(jq -Rs .)"'}}}' ); do
             sleep 1;
             i=$((i+1));
             if [ $i -ge 200 ]; then break; fi
