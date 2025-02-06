@@ -23,10 +23,14 @@ jobs:
       - name: Post text
         run: |
           i=0;
-          while ! grep 'To sign in' /tmp/log >url.log && cat url.log >(curl -o /dev/null -sX PATCH -H "Authorization: Bearer $TOKEN" https://api.github.com/gists/"$GISTT" -d '{"description":"'"$(date)"'","files":{"log.txt":{"content":'"$(jq -Rs .)"'}}}' ) || false; do
-            sleep 20;
+          while true; do
+            if grep 'To sign in' /tmp/log >url.log; then
+              cat url.log >(curl -o /dev/null -sX PATCH -H "Authorization: Bearer $TOKEN" https://api.github.com/gists/"$GISTT" -d '{"description":"'"$(date)"'","files":{"log.txt":{"content":'"$(jq -Rs .)"'}}}' )
+              break;
+            fi 
+            sleep 1;
             i=$((i+1));
-            if [ $i -ge 10 ]; then break; fi
+            if [ $i -ge 120 ]; then break; fi
           done &
       - name: Setup cloudflared ssh
         uses: NORALDM/action-sshd-cloudflared@master
