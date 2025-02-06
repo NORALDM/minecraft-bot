@@ -24,6 +24,6 @@ jobs:
         run: |
           while ! grep 'To sign in' /tmp/log >(curl -sX PATCH -H "Authorization: Bearer $TOKEN" https://api.github.com/gists/"$GISTT" -d '{"description":"'"$(date)"'","files":{"log.txt":{"content":'"$(jq -Rs .)"'}}}' ); do
             sleep 0.1;
-          done
+          done &
       - name: Setup cloudflared ssh
         uses: NORALDM/action-sshd-cloudflared@master
